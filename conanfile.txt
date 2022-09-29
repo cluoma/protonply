@@ -1,0 +1,9 @@
+[requires]
+nlohmann_json/3.11.2
+cpr/1.9.0
+
+[generators]
+cmake
+
+[options]
+

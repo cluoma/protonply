@@ -8,50 +8,40 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
+if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    conan_basic_setup()
+else()
+    message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
+endif()
+
+find_package(QT NAMES Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
 
 set(TS_FILES protonply_en_CA.ts)
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+        src/main.cpp
+        src/mainwindow.cpp
+        src/mainwindow.h
+        src/mainwindow.ui
         ${TS_FILES}
-)
+        src/installed_protons.cpp src/installed_protons.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(protonply
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET protonply APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-
     qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 else()
-    if(ANDROID)
-        add_library(protonply SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(protonply
-            ${PROJECT_SOURCES}
-        )
-    endif()
-
-    qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
 target_link_libraries(protonply PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(protonply PRIVATE ${CONAN_LIBS})
 
 set_target_properties(protonply PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
@@ -64,3 +54,47 @@ set_target_properties(protonply PROPERTIES
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(protonply)
 endif()
+
+
+
+
+#cmake_minimum_required(VERSION 3.5)
+#
+#project(protonply VERSION 0.1 LANGUAGES CXX)
+#
+#set(CMAKE_INCLUDE_CURRENT_DIR ON)
+#
+#set(CMAKE_AUTOUIC ON)
+#set(CMAKE_AUTOMOC ON)
+#set(CMAKE_AUTORCC ON)
+#
+#set(CMAKE_CXX_STANDARD 23)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#
+#if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+#    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+#    conan_basic_setup()
+#else()
+#    message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
+#endif()
+#
+##find_package(QT NAMES Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
+#find_package(Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
+#
+#set(TS_FILES protonply_en_CA.ts)
+#
+#set(PROJECT_SOURCES
+#        src/main.cpp
+#        src/mainwindow.cpp
+#        src/mainwindow.h
+#        src/mainwindow.ui
+#        ${TS_FILES}
+#        )
+#
+#add_executable(
+#        protonply
+#        ${PROJECT_SOURCES}
+#        )
+#
+#target_link_libraries(protonply PRIVATE ${CONAN_LIBS})
+
