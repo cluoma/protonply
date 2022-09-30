@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "protons.h"
 
 #include <QApplication>
 #include <QLocale>
@@ -63,13 +64,18 @@ check_steam_dirs(std::vector<std::string>& names)
 int
 main(int argc, char *argv[])
 {
-    std::vector<std::string> names;
-    check_steam_dirs(names);
-    std::cout << names.size() << "\n";
-    for (const auto& it : names)
-    {
-        std::cout << it << "\n";
-    }
+//    std::vector<std::string> names;
+//    check_steam_dirs(names);
+//    std::cout << names.size() << "\n";
+//    for (const auto& it : names)
+//    {
+//        std::cout << it << "\n";
+//    }
+    protons p;
+    p.check_steam_dirs();
+    p.print_protons();
+
+    return 0;
 
     cpr::Response r = cpr::Get(cpr::Url{"https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases"});
     r.status_code;                  // 200
