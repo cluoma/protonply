@@ -17,14 +17,22 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #else()
 #    message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
 #endif()
-# Download automatically, you can also just copy the conan.cmake file
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-    file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
-            "${CMAKE_BINARY_DIR}/conan.cmake")
+
+include(conan.cmake)
+#conan_cmake_run(REQUIRES nlohmann_json/3.11.2 cpr/1.9.0 BASIC_SETUP)
+conan_cmake_configure(REQUIRES nlohmann_json/3.11.2 cpr/1.9.0
+        GENERATORS cmake)
+conan_cmake_autodetect(settings)
+conan_cmake_install(PATH_OR_REFERENCE .
+        BUILD missing
+        REMOTE conancenter
+        SETTINGS ${settings})
+if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    conan_basic_setup()
+else()
+    message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
 endif()
-include(${CMAKE_BINARY_DIR}/conan.cmake)
-conan_cmake_run(REQUIRES nlohmann_json/3.11.2 cpr/1.9.0 BASIC_SETUP)
 
 find_package(QT NAMES Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
