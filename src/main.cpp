@@ -75,7 +75,7 @@ main(int argc, char *argv[])
     p.check_steam_dirs();
     p.print_protons();
 
-    return 0;
+    //return 0;
 
     cpr::Response r = cpr::Get(cpr::Url{"https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases"});
     r.status_code;                  // 200
@@ -91,7 +91,7 @@ main(int argc, char *argv[])
         std::cout << "name: " << it["tag_name"] << '\n';
     }
 
-    return 0;
+    //return 0;
 
     QApplication a(argc, argv);
 
