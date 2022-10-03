@@ -1,0 +1,57 @@
+app-id: org.flatpak.protonply
+runtime: org.kde.Platform
+runtime-version: '6.3'
+sdk: org.kde.Sdk
+command: protonply
+#build-options:
+#  build-args:
+#    - --share=network
+finish-args:
+  - --share=network
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --socket=ssh-auth
+  - --filesystem=home
+  - --device=dri
+modules:
+#  - name: zlib-ng
+#    buildsystem: cmake
+#    sources:
+#      - type: git
+#        url: https://github.com/zlib-ng/zlib-ng
+#        tag: 2.0.6
+  - name: curl
+    buildsystem: cmake
+    sources:
+      - type: git
+        url: https://github.com/curl/curl
+        tag: curl-7_80_0
+  - name: cpr
+    buildsystem: cmake-ninja
+    build-options:
+      cxxflags:
+        - -std=c++17
+    config-opts:
+      - -DCPR_USE_SYSTEM_CURL=ON
+    builddir: true
+    sources:
+      - type: git
+        url: https://github.com/libcpr/cpr
+  - name: json
+    buildsystem: cmake
+    sources:
+      - type: git
+        url: https://github.com/nlohmann/json
+  - name: protonply
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Debug
+      - -DCMAKE_INSTALL_PREFIX=/app
+      - -G Ninja
+#    sources:
+#      - type: git
+#        url: https://github.com/cluoma/protonply
+    sources:
+      - type: dir
+        path: "."

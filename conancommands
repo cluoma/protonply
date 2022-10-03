@@ -1,4 +1,9 @@
-conan install . -s build_type=Debug --install-path=cmake-build-debug
+[conan]
 conan install . -s build_type=Debug --install-folder=cmake-build-debug --build missing
 conan install . -s build_type=Release --install-folder=cmake-build-release --build missing
 
+[flatpak]
+flatpak-builder build/ org.flatpak.protonply.yml --install-deps-from=flathub --force-clean --repo=repo
+flatpak --user install protonply org.flatpak.protonply
+flatpak run org.flatpak.protonply
+flatpak --user remove protonply org.flatpak.protonply
