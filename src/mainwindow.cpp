@@ -15,25 +15,32 @@ MainWindow::~MainWindow()
 }
 
 void
-MainWindow::add_text(std::string mytext)
+MainWindow::add_text(const std::string& mytext)
 {
-    ui->listWidget->addItem(QString(mytext.c_str()));
+    ui->protonsList->addItem(QString(std::string(mytext).c_str()));
 }
 
 void
 MainWindow::remove_text()
 {
-    ui->listWidget->removeItemWidget(ui->listWidget->item(0));
+    ui->protonsList->removeItemWidget(ui->protonsList->item(0));
 }
 void
 MainWindow::on_pushButton_clicked()
 {
-    ui->listWidget->takeItem(0);
+    auto row = ui->protonsList->takeItem(0);
+    delete row;
 }
 
 
 void MainWindow::on_pushButton_pressed()
 {
     std::cout << "aaa" << std::endl;
+}
+
+
+void MainWindow::on_pushButton_2_pressed()
+{
+    QApplication::quit();
 }
 

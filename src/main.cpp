@@ -17,9 +17,6 @@ main(int argc, char *argv[])
 {
     protons p;
     p.check_steam_dirs();
-    p.print_protons();
-
-    //return 0;
 
     cpr::Response r = cpr::Get(cpr::Url{"https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases"});
     r.status_code;                  // 200
@@ -50,13 +47,12 @@ main(int argc, char *argv[])
         }
     }
     MainWindow w;
-    w.add_text("a");
-    w.add_text("b");
-    w.add_text("c");
-    w.add_text("d");
-    w.add_text("e");
 
-    w.remove_text();
+    for (const auto& it : p)
+    {
+        w.add_text(it.name);
+    }
+
     w.show();
-    return a.exec();
+    return QApplication::exec();
 }

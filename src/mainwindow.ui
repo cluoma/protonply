@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>418</width>
-    <height>339</height>
+    <width>456</width>
+    <height>391</height>
    </rect>
   </property>
   <property name="palette">
@@ -456,24 +456,65 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0">
-    <item row="1" column="0" colspan="2">
-     <widget class="QListWidget" name="listWidget"/>
-    </item>
-    <item row="0" column="0">
-     <widget class="QPushButton" name="pushButton">
-      <property name="text">
-       <string>PushButton</string>
+   <layout class="QGridLayout" name="gridLayout" columnstretch="1,1,0">
+    <item row="0" column="1" rowspan="2">
+     <widget class="QGroupBox" name="userSettingsBox">
+      <property name="title">
+       <string>Available Protons</string>
       </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>GE-Proton</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0" colspan="2">
+        <widget class="QTableView" name="tableView"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="maximumSize">
+          <size>
+           <width>60</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Refresh</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0" colspan="2">
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>Install Selected</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
-    <item row="0" column="1">
-     <widget class="QPushButton" name="pushButton_2">
+    <item row="0" column="0">
+     <widget class="QPushButton" name="updateButton">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>37</height>
+       </size>
+      </property>
       <property name="font">
        <font>
         <weight>75</weight>
         <bold>true</bold>
        </font>
+      </property>
+      <property name="accessibleName">
+       <string/>
+      </property>
+      <property name="accessibleDescription">
+       <string/>
       </property>
       <property name="autoFillBackground">
        <bool>false</bool>
@@ -491,6 +532,25 @@
       </property>
      </widget>
     </item>
+    <item row="1" column="0">
+     <widget class="QGroupBox" name="installedProtonsBox">
+      <property name="title">
+       <string>Installed Protons</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QListWidget" name="protonsList"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="2">
+     <widget class="QProgressBar" name="progressBar">
+      <property name="value">
+       <number>24</number>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -498,16 +558,22 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>418</width>
+     <width>456</width>
      <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSomething">
     <property name="title">
-     <string>Something</string>
+     <string>File</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
     </property>
    </widget>
    <addaction name="menuSomething"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

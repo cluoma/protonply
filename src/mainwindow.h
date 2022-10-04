@@ -15,12 +15,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void add_text(std::string mytext);
+    void add_text(const std::string& mytext);
     void remove_text();
 
 private slots:
     void on_pushButton_pressed();
     void on_pushButton_clicked();
+    void on_pushButton_2_pressed();
 
 private:
     Ui::MainWindow *ui;

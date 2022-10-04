@@ -7,8 +7,7 @@
 #include <iostream>
 #include "protons.h"
 
-int
-protons::check_steam_dirs()
+int protons::check_steam_dirs()
 {
     char * home_dir = getenv("HOME");
     if (home_dir == nullptr)
@@ -59,20 +58,22 @@ protons::check_steam_dirs()
         }
     }
 
+    // sort so that the newest is first
+    std::sort(protons_.begin(), protons_.end(),
+              [](const struct install& a, const struct install& b) {return (a.time > b.time);}
+    );
     std::cout << "Found " << protons_.size() << " proton installs\n";
 
     return 0;
 }
 
-void
-protons::add_install(std::filesystem::path dir, std::string name, std::time_t time)
+void protons::add_install(std::filesystem::path dir, std::string name, std::time_t time)
 {
     struct install tmp = {std::move(dir), std::move(name), time};
     protons_.push_back(tmp);
 }
 
-void
-protons::print_protons()
+void protons::print_protons()
 {
     for (const auto& it : protons_)
     {
