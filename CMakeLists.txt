@@ -45,7 +45,7 @@ set(PROJECT_SOURCES
         src/mainwindow.h
         src/mainwindow.ui
         ${TS_FILES}
-        src/protons.cpp src/protons.h)
+        src/protons.cpp src/protons.h src/ge_proton.cpp src/ge_proton.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(protonply

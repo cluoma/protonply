@@ -7,6 +7,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // make progressBar invisible but keep its area reserved
+    QSizePolicy sp_retain = ui->progressBar->sizePolicy();
+    sp_retain.setRetainSizeWhenHidden(true);
+    ui->progressBar->setSizePolicy(sp_retain);
+    ui->progressBar->setVisible(false);
 }
 
 MainWindow::~MainWindow()

@@ -1,42 +1,28 @@
 #include "mainwindow.h"
 #include "protons.h"
+#include "ge_proton.h"
 
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
-#include <iostream>
-#include <filesystem>
-#include <fstream>
 
-#include <cpr/cpr.h>
-#include "nlohmann/json.hpp"
-using json = nlohmann::json;
-
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     protons p;
-    p.check_steam_dirs();
-
-    cpr::Response r = cpr::Get(cpr::Url{"https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases"});
-    r.status_code;                  // 200
-    r.header["content-type"];       // application/json; charset=utf-8
-    r.text;                         // JSON text string
-    std::cout << (int)r.error.code << std::endl;
-    std::cout << r.text << std::endl;
-
-    json releases = json::parse(r.text);
-//    releases["tag_name"].get<std::vector<std::string>>();
-    std::cout << releases[0]["tag_name"] << std::endl;
-    for (auto it : releases)
+    if (p.check_steam_dirs())
     {
-        std::cout << "name: " << it["tag_name"] << '\n';
+        return 1;
     }
 
-    //return 0;
+    ge_proton ge_p;
+    ge_p.check_for_releases();
+    ge_p.print_releases();
 
+
+    // start application
     QApplication a(argc, argv);
 
+    // load translations
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();
     for (const QString &locale : uiLanguages) {
@@ -46,13 +32,16 @@ main(int argc, char *argv[])
             break;
         }
     }
-    MainWindow w;
 
+    // start main window
+    MainWindow w;
+    // add all found installed proton versions
     for (const auto& it : p)
     {
         w.add_text(it.name);
     }
 
+    // show window and start Qt
     w.show();
     return QApplication::exec();
 }

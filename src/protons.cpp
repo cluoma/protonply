@@ -20,6 +20,13 @@ int protons::check_steam_dirs()
     std::filesystem::path steam_base_dir = home_dir_str;
     steam_base_dir /= ".steam/steam";
 
+    // check there is a steam installation
+    if (!std::filesystem::exists(steam_base_dir))
+    {
+        fprintf(stderr, "No Steam directory found");
+        return 1;
+    }
+
     // make compatibility directory if it doesn't exist
     if (!std::filesystem::exists(steam_base_dir / "compatibilitytools.d"))
     {

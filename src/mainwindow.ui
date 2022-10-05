@@ -456,8 +456,27 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout" columnstretch="1,1,0">
-    <item row="0" column="1" rowspan="2">
+   <layout class="QGridLayout" name="gridLayout" columnstretch="1,1">
+    <item row="1" column="0">
+     <widget class="QGroupBox" name="installedProtonsBox">
+      <property name="title">
+       <string>Installed Protons</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QListWidget" name="protonsList"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="2">
+     <widget class="QProgressBar" name="progressBar">
+      <property name="value">
+       <number>24</number>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
      <widget class="QGroupBox" name="userSettingsBox">
       <property name="title">
        <string>Available Protons</string>
@@ -496,7 +515,7 @@
       </layout>
      </widget>
     </item>
-    <item row="0" column="0">
+    <item row="0" column="0" colspan="2">
      <widget class="QPushButton" name="updateButton">
       <property name="minimumSize">
        <size>
@@ -529,25 +548,6 @@
       </property>
       <property name="text">
        <string>Update Protons</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QGroupBox" name="installedProtonsBox">
-      <property name="title">
-       <string>Installed Protons</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QListWidget" name="protonsList"/>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="2" column="0" colspan="2">
-     <widget class="QProgressBar" name="progressBar">
-      <property name="value">
-       <number>24</number>
       </property>
      </widget>
     </item>
