@@ -7,15 +7,28 @@
 
 int ge_proton::check_for_releases() {
     cpr::Response r = cpr::Get(cpr::Url{"https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases?per_page=100"});
-    // TODO: error check status code before continuing
-    r.status_code;                  // 200
-    r.header["content-type"];       // application/json; charset=utf-8
-    r.text;                         // JSON text string
+    if (r.error.operator bool())
+    {
+        fprintf(stderr, "Error contacting github api\n");
+        return 1;
+    }
 
-    json j = json::parse(r.text);
+    if (r.status_code != 200)
+    {
+        fprintf(stderr, "Non-200 return status from github api\n");
+        return 1;
+    }
+
+    json j = json::parse(r.text, nullptr, false, false);
+    if (j.is_discarded())
+    {
+        fprintf(stderr, "Unable to parse github api response\n");
+        return 1;
+    }
+
+    // populate vector of GE-Proton releases from JSON
     for (auto it : j)
     {
-        //std::cout << "name: " << it["tag_name"] << '\n';
         releases_.push_back(
             release {
                 it["tag_name"].get<std::string>(),
@@ -27,10 +40,12 @@ int ge_proton::check_for_releases() {
             if (it2["name"] == it["tag_name"].get<std::string>() + ".tar.gz")
             {
                 releases_.back().asset_url = it2["browser_download_url"].get<std::string>();
+                releases_.back().asset_name = it2["name"].get<std::string>();
             }
             else if (it2["name"] == it["name"].get<std::string>() + ".tar.gz")
             {
                 releases_.back().asset_url = it2["browser_download_url"].get<std::string>();
+                releases_.back().asset_name = it2["name"].get<std::string>();
             }
         }
     }
@@ -49,4 +64,56 @@ void ge_proton::print_releases() {
     {
         std::cout << it.tag_name << "    \n" << it.asset_url << std::endl;
     }
+}
+
+// search for and flag proton versions that are installed based on name
+void ge_proton::set_installed(const protons& p) {
+    for (const auto& it : p)
+    {
+        auto r = std::find_if(releases_.begin(), releases_.end(),
+                  [&it](const release& x) { return x.tag_name == it.name; });
+        if (r != releases_.end())
+        {
+            r->installed = true;
+        }
+    }
+}
+
+bool ge_proton::has_update_available() {
+    if (!releases_[0].installed)
+    {
+        return true;
+    }
+    return false;
+}
+
+int ge_proton::download_latest() {
+    if (releases_[0].installed)
+    {
+        return 1;
+    }
+    emit download_start();
+
+    std::ofstream of(releases_[0].asset_name, std::ios::binary);
+    cpr::Response r = cpr::Download(of, cpr::Url{releases_[0].asset_url},
+                                    cpr::ProgressCallback([&](cpr::cpr_off_t downloadTotal, cpr::cpr_off_t downloadNow, cpr::cpr_off_t uploadTotal, cpr::cpr_off_t uploadNow, intptr_t userdata) -> bool
+                                                          {
+                                                              if (downloadTotal > 0)
+                                                              {
+                                                                  // send signal to main window
+                                                                  emit download_inc_percent((int) (((float) downloadNow /
+                                                                                               (float) downloadTotal) *
+                                                                                              100));
+                                                              }
+                                                              return true;
+                                                          }));
+    std::cout << "http status code = " << r.status_code << std::endl << std::endl;
+
+    if (r.status_code == 200) {
+        emit download_finished(r.status_code == 200);
+    } else {
+        emit download_finished(0);
+    }
+
+    return 0;
 }

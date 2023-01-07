@@ -34,8 +34,8 @@ endif()
 #    message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
 #endif()
 
-find_package(QT NAMES Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
+find_package(QT NAMES Qt6 COMPONENTS Core Gui Widgets LinguistTools REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui Widgets LinguistTools REQUIRED)
 
 set(TS_FILES protonply_en_CA.ts)
 
@@ -45,7 +45,9 @@ set(PROJECT_SOURCES
         src/mainwindow.h
         src/mainwindow.ui
         ${TS_FILES}
-        src/protons.cpp src/protons.h src/ge_proton.cpp src/ge_proton.h)
+        src/protons.cpp src/protons.h src/ge_proton.cpp src/ge_proton.h
+#        src/updater.cpp src/updater.h
+        )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(protonply
@@ -56,11 +58,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 else()
 endif()
 
-target_link_libraries(protonply PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(protonply PRIVATE
+        Qt${QT_VERSION_MAJOR}::Widgets)
 if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     target_link_libraries(protonply PRIVATE ${CONAN_LIBS})
 else()
-    target_link_libraries(protonply PRIVATE cpr::cpr)
+
 endif()
 
 set_target_properties(protonply PROPERTIES

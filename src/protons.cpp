@@ -5,6 +5,7 @@
 #include <fstream>
 #include <utility>
 #include <iostream>
+#include <algorithm>
 #include "protons.h"
 
 int protons::check_steam_dirs()
