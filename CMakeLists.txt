@@ -63,7 +63,7 @@ target_link_libraries(protonply PRIVATE
 if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     target_link_libraries(protonply PRIVATE ${CONAN_LIBS})
 else()
-
+    target_link_libraries(protonply PRIVATE ${CONAN_LIBS} cpr::cpr)
 endif()
 
 set_target_properties(protonply PROPERTIES

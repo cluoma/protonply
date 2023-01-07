@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include "protons.h"
 
 #include <QApplication>
 #include <QLocale>
@@ -7,12 +6,6 @@
 
 int main(int argc, char *argv[])
 {
-//    protons p;
-//    if (p.check_steam_dirs() != 0)
-//    {
-//        return 1;
-//    }
-
     // start application
     QApplication a(argc, argv);
 

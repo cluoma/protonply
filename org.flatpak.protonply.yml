@@ -28,21 +28,27 @@ modules:
         url: https://github.com/curl/curl
         tag: curl-7_80_0
   - name: cpr
-    buildsystem: cmake-ninja
+    buildsystem: cmake
     build-options:
       cxxflags:
         - -std=c++17
     config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
       - -DCPR_USE_SYSTEM_CURL=ON
+      - -DCPR_FORCE_USE_SYSTEM_CURL=ON
     builddir: true
     sources:
       - type: git
         url: https://github.com/libcpr/cpr
+        tag: 1.9.0
   - name: json
     buildsystem: cmake
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
     sources:
       - type: git
         url: https://github.com/nlohmann/json
+        tag: v3.11.2
   - name: protonply
     buildsystem: cmake-ninja
     config-opts:
