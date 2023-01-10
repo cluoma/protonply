@@ -30,6 +30,7 @@ public:
     void set_installed(const protons& p);
     bool has_update_available();
     int download_latest();
+    int install_latest();
 
 private:
     std::vector<struct release> releases_;

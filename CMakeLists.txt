@@ -47,13 +47,12 @@ set(PROJECT_SOURCES
         ${TS_FILES}
         src/protons.cpp src/protons.h src/ge_proton.cpp src/ge_proton.h
 #        src/updater.cpp src/updater.h
-        )
+        src/untar.cpp src/untar.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(protonply
         MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-    )
+        ${PROJECT_SOURCES})
     qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 else()
 endif()
@@ -63,7 +62,7 @@ target_link_libraries(protonply PRIVATE
 if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     target_link_libraries(protonply PRIVATE ${CONAN_LIBS})
 else()
-    target_link_libraries(protonply PRIVATE ${CONAN_LIBS} cpr::cpr)
+    target_link_libraries(protonply PRIVATE ${CONAN_LIBS} cpr::cpr archive)
 endif()
 
 set_target_properties(protonply PROPERTIES

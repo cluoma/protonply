@@ -49,6 +49,12 @@ modules:
       - type: git
         url: https://github.com/nlohmann/json
         tag: v3.11.2
+  - name: libarchive
+    buildsystem: cmake
+    sources:
+      - type: git
+        url: https://github.com/libarchive/libarchive.git
+        tag: v3.6.2
   - name: protonply
     buildsystem: cmake-ninja
     config-opts:

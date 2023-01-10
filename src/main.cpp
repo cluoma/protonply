@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "untar.h"
 
 #include <QApplication>
 #include <QLocale>
@@ -6,6 +7,10 @@
 
 int main(int argc, char *argv[])
 {
+//    untar("GE-Proton7-43.tar.gz", "/home/colin/Documents/protonply/test/");
+//    return 0;
+
+
     // start application
     QApplication a(argc, argv);
 

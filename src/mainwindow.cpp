@@ -136,6 +136,7 @@ void MainWindow::when_ge_proton_download_perc_inc(int val)
 void MainWindow::when_ge_proton_download_finished(int success)
 {
     ui->progressBar->setVisible(false);
+    ge_p_.install_latest();
     enableButtons();
 }
 

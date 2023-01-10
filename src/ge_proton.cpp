@@ -3,6 +3,8 @@
 //
 
 #include "ge_proton.h"
+#include "untar.h"
+
 #include <iostream>
 
 int ge_proton::check_for_releases() {
@@ -116,4 +118,17 @@ int ge_proton::download_latest() {
     }
 
     return 0;
+}
+
+int ge_proton::install_latest() {
+    if (releases_[0].installed)
+    {
+        return 1;
+    }
+
+    char * home_dir = getenv("HOME");
+    std::filesystem::path steam_dir(home_dir);
+    steam_dir = steam_dir / ".steam/steam/compatibilitytools.d";
+
+    return untar(releases_[0].asset_name.c_str(), steam_dir.c_str());
 }
