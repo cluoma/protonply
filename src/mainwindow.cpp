@@ -9,6 +9,11 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    MainWindow::connect(&ge_p_, &ge_proton::check_for_releases_started,
+                        this, &MainWindow::when_ge_proton_check_for_releases_started);
+    MainWindow::connect(&ge_p_, &ge_proton::check_for_releases_finished,
+                        this, &MainWindow::when_ge_proton_check_for_releases_finished);
+
     MainWindow::connect(&ge_p_, &ge_proton::download_inc_percent,
                      this, &MainWindow::when_ge_proton_download_perc_inc);
     MainWindow::connect(&ge_p_, &ge_proton::download_start,
@@ -35,6 +40,7 @@ void MainWindow::check_installed_protons()
         //return 1;
     }
     // add all found installed proton versions
+    remove_all_text();
     for (const auto& it : p_)
     {
         add_text(it.name);
@@ -52,6 +58,18 @@ MainWindow::remove_text()
 {
     ui->protonsList->removeItemWidget(ui->protonsList->item(0));
 }
+
+void
+MainWindow::remove_all_text()
+{
+    int elements = ui->protonsList->count();
+    for (int i = 0; i < elements; i++)
+    {
+        auto row = ui->protonsList->takeItem(0);
+        delete row;
+    }
+}
+
 //void
 //MainWindow::on_pushButton_clicked()
 //{
@@ -73,6 +91,9 @@ void MainWindow::setupUiExtra()
     // setup progress bar
     ui->progressBar->setMaximum(100);
     ui->progressBar->setMinimum(0);
+    // cancel button is part of the progress bar
+    ui->cancelUpdateButton->setEnabled(false);
+    ui->cancelUpdateButton->setVisible(false);
 }
 
 void MainWindow::updateProgressBar(int x)
@@ -84,21 +105,20 @@ void MainWindow::on_updateButton_clicked()
 {
     disableButtons();
 
-    ui->progressBar->setFormat("checking for new Protons...");
-    ui->progressBar->setRange(0, 0);
-    ui->progressBar->setVisible(true);
+    QFuture<int> r = QtConcurrent::run( &ge_proton::check_for_releases, &ge_p_, p_);
 
-    if (ge_p_.check_for_releases() != 0)
-    {
+//    if (ge_p_.check_for_releases() != 0)
+//    {
 //        return 1;
-    }
+//    }
     //ge_p_.print_releases();
-    ge_p_.set_installed(p_);
-    if (ge_p_.has_update_available())
-    {
-        QFuture<int> r = QtConcurrent::run( &ge_proton::download_latest, &ge_p_);
-        printf("downloaded");
-    }
+
+//    ge_p_.set_installed(p_);
+//    if (ge_p_.has_update_available())
+//    {
+//        r = QtConcurrent::run( &ge_proton::download_latest, &ge_p_);
+//        printf("downloaded");
+//    }
 }
 
 void MainWindow::disableButtons()
@@ -113,8 +133,31 @@ void MainWindow::enableButtons()
     QApplication::processEvents();
 }
 
-/* slots to update stuff while download a new Proton version */
+/* slots to update stuff when checking proton releases */
+void MainWindow::when_ge_proton_check_for_releases_started()
+{
+    ui->progressBar->setFormat("checking for new Protons...");
+    ui->progressBar->setRange(0, 0);
+    ui->progressBar->setVisible(true);
 
+    ui->cancelUpdateButton->setEnabled(true);
+    ui->cancelUpdateButton->setVisible(true);
+}
+void MainWindow::when_ge_proton_check_for_releases_finished(int has_update)
+{
+    if (has_update)
+    {
+        QFuture<int> r = QtConcurrent::run( &ge_proton::download_latest, &ge_p_);
+        printf("downloaded");
+    }
+    else
+    {
+        ui->progressBar->setVisible(false);
+        enableButtons();
+    }
+}
+
+/* slots to update stuff while download a new Proton version */
 void MainWindow::when_ge_proton_download_start()
 {
     printf("GE-Proton update available\n");
@@ -135,8 +178,13 @@ void MainWindow::when_ge_proton_download_perc_inc(int val)
 
 void MainWindow::when_ge_proton_download_finished(int success)
 {
+    // hide progress bar and cancel button
     ui->progressBar->setVisible(false);
+    ui->cancelUpdateButton->setEnabled(false);
+    ui->cancelUpdateButton->setVisible(false);
+
     ge_p_.install_latest();
+    check_installed_protons();
     enableButtons();
 }
 

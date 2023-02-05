@@ -7,7 +7,8 @@
 
 #include <iostream>
 
-int ge_proton::check_for_releases() {
+int ge_proton::check_for_releases(const protons& p) {
+    emit check_for_releases_started();
     cpr::Response r = cpr::Get(cpr::Url{"https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases?per_page=100"});
     if (r.error.operator bool())
     {
@@ -57,6 +58,10 @@ int ge_proton::check_for_releases() {
             std::remove_if(releases_.begin(), releases_.end(),
                            [](const release& x) { return x.asset_url.empty(); }),
                  releases_.end());
+
+    set_installed(p);
+
+    emit check_for_releases_finished(has_update_available());
 
     return 0;
 }

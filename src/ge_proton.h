@@ -25,7 +25,7 @@ public:
         std::string asset_name;
         bool installed = false;
     };
-    int check_for_releases();
+    int check_for_releases(const protons& p);
     void print_releases();
     void set_installed(const protons& p);
     bool has_update_available();
@@ -36,6 +36,10 @@ private:
     std::vector<struct release> releases_;
 
 signals:
+    void check_for_releases_started();
+    void check_for_releases_finished(int has_update);
+
+
     void download_start();
     void download_inc_percent(int newValue);
     void download_finished(int success);

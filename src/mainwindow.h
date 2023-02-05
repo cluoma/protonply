@@ -25,6 +25,9 @@ public:
 private slots:
     void on_updateButton_clicked();
 
+    void when_ge_proton_check_for_releases_started();
+    void when_ge_proton_check_for_releases_finished(int has_update);
+
     void when_ge_proton_download_start();
     void when_ge_proton_download_perc_inc(int val);
     void when_ge_proton_download_finished(int success);
@@ -40,5 +43,6 @@ private:
 
     void check_installed_protons();
 //    void update_protons();
+    void remove_all_text();
 };
 #endif // MAINWINDOW_H
