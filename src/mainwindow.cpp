@@ -106,19 +106,6 @@ void MainWindow::on_updateButton_clicked()
     disableButtons();
 
     QFuture<int> r = QtConcurrent::run( &ge_proton::check_for_releases, &ge_p_, p_);
-
-//    if (ge_p_.check_for_releases() != 0)
-//    {
-//        return 1;
-//    }
-    //ge_p_.print_releases();
-
-//    ge_p_.set_installed(p_);
-//    if (ge_p_.has_update_available())
-//    {
-//        r = QtConcurrent::run( &ge_proton::download_latest, &ge_p_);
-//        printf("downloaded");
-//    }
 }
 
 void MainWindow::disableButtons()
@@ -130,6 +117,8 @@ void MainWindow::disableButtons()
 void MainWindow::enableButtons()
 {
     ui->updateButton->setDisabled(false);
+    ui->cancelUpdateButton->setDisabled(false);
+    ui->cancelUpdateButton->setVisible(false);
     QApplication::processEvents();
 }
 
@@ -187,4 +176,20 @@ void MainWindow::when_ge_proton_download_finished(int success)
     check_installed_protons();
     enableButtons();
 }
+
+void MainWindow::on_protonsList_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous) {
+    if (current != nullptr) {
+        ui->removeProton->setDisabled(false);
+    }
+}
+
+void MainWindow::on_removeProton_clicked() {
+    QListWidgetItem *selectedProton = ui->protonsList->currentItem();
+    std::cout << "removing: " << selectedProton->text().toStdString() << std::endl;
+}
+
+void MainWindow::on_quitButton_clicked() {
+    QApplication::quit();
+}
+
 

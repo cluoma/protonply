@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QListWidgetItem>
 
 #include "protons.h"
 #include "ge_proton.h"
@@ -24,6 +25,10 @@ public:
 
 private slots:
     void on_updateButton_clicked();
+    void on_protonsList_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    void on_removeProton_clicked();
+    void on_quitButton_clicked();
+
 
     void when_ge_proton_check_for_releases_started();
     void when_ge_proton_check_for_releases_finished(int has_update);
@@ -44,5 +49,6 @@ private:
     void check_installed_protons();
 //    void update_protons();
     void remove_all_text();
+
 };
 #endif // MAINWINDOW_H
