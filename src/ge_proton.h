@@ -2,6 +2,7 @@
 // Created by colin on 04/10/22.
 //
 
+
 #ifndef PROTONPLY_GE_PROTON_H
 #define PROTONPLY_GE_PROTON_H
 
@@ -32,8 +33,12 @@ public:
     int download_latest();
     int install_latest();
 
+public slots:
+    void when_cancel_proton_update();
+
 private:
     std::vector<struct release> releases_;
+    bool stop_download_ = false;
 
 signals:
     void check_for_releases_started();

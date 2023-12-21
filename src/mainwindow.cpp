@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
                      this, &MainWindow::when_ge_proton_download_start);
     MainWindow::connect(&ge_p_, &ge_proton::download_finished,
                      this, &MainWindow::when_ge_proton_download_finished);
+    MainWindow::connect(this, &MainWindow::cancel_proton_update,
+        &ge_p_, &ge_proton::when_cancel_proton_update);
 
     ui->setupUi(this);
     setupUiExtra();
@@ -172,7 +174,9 @@ void MainWindow::when_ge_proton_download_finished(int success)
     ui->cancelUpdateButton->setEnabled(false);
     ui->cancelUpdateButton->setVisible(false);
 
-    ge_p_.install_latest();
+    if (success && ge_p_.install_latest()) {
+
+    }
     check_installed_protons();
     enableButtons();
 }
@@ -183,12 +187,19 @@ void MainWindow::on_protonsList_currentItemChanged(QListWidgetItem *current, QLi
     }
 }
 
+void MainWindow::on_cancelUpdateButton_clicked()
+{
+    std::cout << "cancel button clicked" << std::endl;
+    emit cancel_proton_update();
+}
+
 void MainWindow::on_removeProton_clicked() {
     QListWidgetItem *selectedProton = ui->protonsList->currentItem();
     std::cout << "removing: " << selectedProton->text().toStdString() << std::endl;
 }
 
 void MainWindow::on_quitButton_clicked() {
+    emit cancel_proton_update();
     QApplication::quit();
 }
 

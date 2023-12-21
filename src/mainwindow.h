@@ -26,6 +26,7 @@ public:
 private slots:
     void on_updateButton_clicked();
     void on_protonsList_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    void on_cancelUpdateButton_clicked();
     void on_removeProton_clicked();
     void on_quitButton_clicked();
 
@@ -49,6 +50,9 @@ private:
     void check_installed_protons();
 //    void update_protons();
     void remove_all_text();
+
+signals:
+    void cancel_proton_update();
 
 };
 #endif // MAINWINDOW_H

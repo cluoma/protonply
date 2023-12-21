@@ -1,0 +1,10 @@
+{
+  "name" : "protonply",
+  "version-string" : "1.0.0",
+  "builtin-baseline" : "27728bbae691c52cc261e839630a4e93d0e6c8e1",
+  "proton_dirs" : [
+    {
+      "dir" : "~/.steam/steam/compatibilitytools.d"
+    }
+  ]
+}

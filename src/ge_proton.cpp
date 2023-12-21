@@ -105,6 +105,10 @@ int ge_proton::download_latest() {
     cpr::Response r = cpr::Download(of, cpr::Url{releases_[0].asset_url},
                                     cpr::ProgressCallback([&](cpr::cpr_off_t downloadTotal, cpr::cpr_off_t downloadNow, cpr::cpr_off_t uploadTotal, cpr::cpr_off_t uploadNow, intptr_t userdata) -> bool
                                                           {
+                                                              if (stop_download_)
+                                                              {
+                                                                  return false;
+                                                              }
                                                               if (downloadTotal > 0)
                                                               {
                                                                   // send signal to main window
@@ -116,9 +120,10 @@ int ge_proton::download_latest() {
                                                           }));
     std::cout << "http status code = " << r.status_code << std::endl << std::endl;
 
-    if (r.status_code == 200) {
+    if (!stop_download_ && r.status_code == 200) {
         emit download_finished(r.status_code == 200);
     } else {
+        stop_download_ = false;
         emit download_finished(0);
     }
 
@@ -136,4 +141,9 @@ int ge_proton::install_latest() {
     steam_dir = steam_dir / ".steam/steam/compatibilitytools.d";
 
     return untar(releases_[0].asset_name.c_str(), steam_dir.c_str());
+}
+
+void ge_proton::when_cancel_proton_update()
+{
+    stop_download_ = true;
 }

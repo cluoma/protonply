@@ -36,6 +36,8 @@ static int copy_data(struct archive *ar, struct archive *aw)
 
 int untar(const char * arch_filename, const char * out_dir)
 {
+    int ret = UNTAR_SUCCCES;
+
     std::filesystem::path dir(out_dir);
 
     struct archive *a;
@@ -56,16 +58,24 @@ int untar(const char * arch_filename, const char * out_dir)
     ext = archive_write_disk_new();
     archive_write_disk_set_options(ext, flags);
     archive_write_disk_set_standard_lookup(ext);
-    if (archive_read_open_filename(a, arch_filename, 10240))
-        exit(1);
+
+    /* Open tar file */
+    if (archive_read_open_filename(a, arch_filename, 10240)) {
+        ret = UNTAR_ERROR;
+        goto bad;
+    }
+
+
     for (;;) {
         r = archive_read_next_header(a, &entry);
         if (r == ARCHIVE_EOF)
             break;
         if (r < ARCHIVE_OK)
             fprintf(stderr, "%s\n", archive_error_string(a));
-        if (r < ARCHIVE_WARN)
-            exit(1);
+        if (r < ARCHIVE_WARN) {
+            ret = UNTAR_ERROR;
+            goto bad;
+        }
 
         std::cout << archive_entry_pathname(entry) << '\n';
         archive_entry_set_pathname(entry, (dir / archive_entry_pathname(entry)).c_str());
@@ -77,20 +87,25 @@ int untar(const char * arch_filename, const char * out_dir)
             r = copy_data(a, ext);
             if (r < ARCHIVE_OK)
                 fprintf(stderr, "%s\n", archive_error_string(ext));
-            if (r < ARCHIVE_WARN)
-                exit(1);
+            if (r < ARCHIVE_WARN) {
+                ret = UNTAR_ERROR;
+                goto bad;
+            }
         }
         r = archive_write_finish_entry(ext);
         if (r < ARCHIVE_OK)
             fprintf(stderr, "%s\n", archive_error_string(ext));
-        if (r < ARCHIVE_WARN)
-            exit(1);
+        if (r < ARCHIVE_WARN) {
+            ret = UNTAR_ERROR;
+            goto bad;
+        }
     }
 
+bad:
     archive_read_close(a);
     archive_read_free(a);
     archive_write_close(ext);
     archive_write_free(ext);
 
-    return 0;
+    return ret;
 }
