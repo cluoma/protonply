@@ -88,3 +88,18 @@ void protons::print_protons()
         std::cout << it.dir.string() << " :: " << it.name << std::endl;
     }
 }
+
+int protons::remove_install(std::string name) {
+    std::filesystem::path steam_base_dir = std::string(getenv("HOME"));
+    steam_base_dir /= ".steam/steam/compatibilitytools.d";
+
+    for (auto p : protons_)
+    {
+        if (p.name == name)
+        {
+            std::filesystem::remove_all(p.dir);
+            return 0;
+        }
+    }
+    return 0;
+}

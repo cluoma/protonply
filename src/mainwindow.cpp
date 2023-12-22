@@ -196,6 +196,8 @@ void MainWindow::on_cancelUpdateButton_clicked()
 void MainWindow::on_removeProton_clicked() {
     QListWidgetItem *selectedProton = ui->protonsList->currentItem();
     std::cout << "removing: " << selectedProton->text().toStdString() << std::endl;
+    p_.remove_install(selectedProton->text().toStdString());
+    delete selectedProton;
 }
 
 void MainWindow::on_quitButton_clicked() {

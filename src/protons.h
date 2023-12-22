@@ -20,6 +20,7 @@ public:
     };
     int check_steam_dirs();
     void print_protons();
+    int remove_install(std::string name);  // removes install from list and also deletes the folder
 
     std::vector<struct install>::iterator begin() { return protons_.begin(); }
     std::vector<struct install>::iterator end() { return protons_.end(); }
